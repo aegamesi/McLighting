@@ -315,6 +315,19 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght
       }
       break;
 
+    case WStype_BIN: {
+        // assume this is set the first floor(lenght/3) pixels to these colors.
+        int n = 0;
+        for (int i = 0; i < lenght; i += 3) {
+          strip.setPixelColor(n, payload[i], payload[i + 1], payload[i + 2]);
+          n += 1;
+        }
+        strip.show();
+        mode = CUSTOM;
+        webSocket.sendTXT(num, "OK");
+      }
+      break;
+
     case WStype_TEXT:
       DBG_OUTPUT_PORT.printf("WS: [%u] get Text: %s\n", num, payload);
 
